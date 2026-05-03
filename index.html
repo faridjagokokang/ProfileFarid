@@ -1,0 +1,305 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Muhammad Farid Donovant</title>
+    <link rel="stylesheet" href="css/Porto.css">
+</head>
+
+<body>
+    <div id="auth-container" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 id="auth-title">SYSTEM_LOGIN</h2>
+                <p class="auth-subtitle" id="auth-subtitle">ENTER CREDENTIALS TO CONTINUE...</p>
+            </div>
+            <form id="auth-form" class="contact-form-advanced">
+                <div class="form-group">
+                    <label for="auth-username">Username</label>
+                    <input type="text" id="auth-username" required placeholder="Masukkan username" class="auth-input">
+                </div>
+                <div class="form-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" id="auth-password" required placeholder="Masukkan password"
+                        class="auth-input">
+                </div>
+                <button type="submit" id="auth-submit-btn" class="submit-btn auth-submit">EXECUTE_LOGIN</button>
+                <p id="auth-msg" class="error-text" style="text-align: center; margin-top: 15px; font-weight: 500;"></p>
+                <p style="text-align: center; margin-top: 25px; font-size: 0.95rem;">
+                    <a href="#" id="toggle-auth" class="auth-link">DON'T HAVE ACCOUNT? <span>CREATE_ACCOUNT</span></a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" style="display: none;">
+        <div class="container">
+            <header class="hero">
+                <img src="Farid.jpg" alt="Foto profil Farid" class="profile-photo">
+                <nav class="nav"
+                    style="position: absolute; top: 16px; right: 16px; display: flex; gap: 10px; z-index: 10;">
+                    <button id="theme-btn" class="theme-btn">SWAP_PHOSPHOR</button>
+                    <button class="tab-btn" data-tab="articles">[ARTICLES.EXE]</button>
+                    <button id="logout-btn" class="theme-btn">LOG_OUT</button>
+                </nav>
+                <div class="hero-text">
+                    <p id="greeting"></p>
+                    <h1>Muhammad Farid Donovant</h1>
+                    <p class="info">NIM 24EO10021 • Prodi Informatika
+                    </p>
+                    <p class="tagline">Mahasiswa Informatika dengan semangat teknologi, kreativitas, dan pengalaman
+                        belajar yang terus berkembang.</p>
+                </div>
+            </header>
+
+            <main>
+                <section class="card">
+                    <h2>Tentang Saya</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="about">[ABOUT.DAT]</button>
+                        <button class="tab-btn" data-tab="skills">[SKILLS.DAT]</button>
+                    </div>
+
+                    <div id="tab-about" class="tab-panel active">
+                        <p id="age-display"> dan tinggal di Kabupaten Cilacap, Kecamatan Kesugihan. Saat ini saya tengah
+                            menempuh pendidikan di Program Studi Informatika dan memiliki minat besar pada dunia
+                            teknologi serta programming.</p>
+                        <p id="typing-text"></p>
+                    </div>
+
+                    <div id="tab-skills" class="tab-panel">
+                        <p>Berikut adalah skill saya dalam bidang teknologi dan programming:</p>
+                        <ul>
+                            <li><strong>JavaScript</strong> - Kemampuan dasar hingga menengah</li>
+                            <li><strong>HTML & CSS</strong> - Pembuatan layout dan styling website</li>
+                            <li><strong>Problem Solving</strong> - Kemampuan analisis dan pemecahan masalah</li>
+                            <li><strong>Team Work</strong> - Kolaborasi dalam tim development</li>
+                        </ul>
+                    </div>
+
+                    <div id="tab-articles" class="tab-panel">
+                        <div class="contact-form-container">
+                            <h2 id="formTitle">Tambah Artikel</h2>
+                            <form id="articleForm" class="contact-form-advanced">
+                                <input type="hidden" id="articleId">
+
+                                <div class="form-group">
+                                    <label for="title">Judul Artikel:</label>
+                                    <input type="text" id="title" required minlength="3"
+                                        placeholder="Masukkan judul...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="author">Penulis:</label>
+                                    <input type="text" id="author" required placeholder="Nama penulis...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="content">Konten:</label>
+                                    <textarea id="content" rows="4" required placeholder="Isi artikel..."></textarea>
+                                </div>
+
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="submit" id="btnSubmit" class="submit-btn">SIMPAN.EXE</button>
+                                    <button type="button" id="btnCancel" class="submit-btn"
+                                        style="display: none; color: var(--error-color); border-color: var(--error-color);">ABORT</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div style="margin-top: 30px;">
+                            <h2>Daftar Artikel</h2>
+                            <div id="articleList"></div>
+                        </div>
+                    </div>
+
+        </div>
+        </section>
+
+        <section class="card grid-2">
+            <div>
+                <h2>Hobi Saya</h2>
+                <ul>
+                    <li>Ngoding</li>
+                    <li>Main game</li>
+                    <li>Membaca di semua platform</li>
+                    <li>Olahraga: renang, minisoccer, basket</li>
+                </ul>
+            </div>
+            <div>
+                <h2>Tujuan Utama</h2>
+                <ol>
+                    <li>Menjadi Software Engineer &amp; Hardware Engineer</li>
+                    <li>Membangun startup sendiri</li>
+                    <li>Bekerja di perusahaan teknologi besar</li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Hal Favorit Saya</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Favorit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Makanan</td>
+                        <td>Udang Saus Padang</td>
+                    </tr>
+                    <tr>
+                        <td>Warna</td>
+                        <td>Hitam</td>
+                    </tr>
+                    <tr>
+                        <td>Film</td>
+                        <td>Horor</td>
+                    </tr>
+                    <tr>
+                        <td>Buku</td>
+                        <td>Atomic Habits</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="card">
+            <h2>Skill Saya</h2>
+
+            <div class="skill-item" data-level="85">
+                <p>JavaScript</p>
+                <div class="skill-bar">
+                    <div class="skill-fill"></div>
+                </div>
+            </div>
+
+            <div class="skill-item" data-level="90">
+                <p>HTML & CSS</p>
+                <div class="skill-bar">
+                    <div class="skill-fill"></div>
+                </div>
+            </div>
+            <div class="skill-item" data-level="80">
+                <p>Problem Solving</p>
+                <div class="skill-bar">
+                    <div class="skill-fill"></div>
+                </div>
+            </div>
+            <div class="skill-item" data-level="85">
+                <p>Team Work</p>
+                <div class="skill-bar">
+                    <div class="skill-fill"></div>
+                </div>
+            </div>
+        </section>
+        <section class="card">
+            <h2>Projects</h2>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="web">Web</button>
+                <button class="filter-btn" data-filter="app">App</button>
+            </div>
+
+            <div class="projects">
+                <div class="project-card" data-category="web">Website Portfolio</div>
+                <div class="project-card" data-category="app">Mobile App</div>
+            </div>
+        </section>
+        <section class="card contact-card">
+            <div class="contact-wrapper">
+                <div class="contact-form-container">
+                    <h2>Hubungi Saya</h2>
+                    <p class="contact-note">Isi formulir di bawah ini dan saya akan menghubungi Anda dalam waktu kurang
+                        dari 24 jam</p>
+
+                    <form id="contact-form" class="contact-form-advanced">
+                        <!-- Row 1: Name -->
+                        <div class="form-group">
+                            <label for="full-name">Nama Lengkap</label>
+                            <input type="text" id="full-name" name="name" placeholder="Contoh: John Doe" required>
+                            <span id="err-name" class="error-text"></span>
+                        </div>
+
+                        <!-- Row 2: Email -->
+                        <div class="form-group">
+                            <label for="email-field">Email</label>
+                            <input type="email" id="email-field" name="email" placeholder="Contoh: johndoe@edot.id"
+                                required>
+                            <span id="err-email" class="error-text"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Nomor Telepon</label>
+                            <div class="phone-input-wrapper">
+                                <select class="country-code" name="country_code">
+                                    <option value="+62">🇮🇩 +62</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+86">🇨🇳 +86</option>
+                                </select>
+                                <input type="tel" id="phone" name="phone" placeholder="Contoh: 8123456789" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="questions">Pertanyaan Anda</label>
+                            <textarea id="questions" name="questions" rows="5"
+                                placeholder="Masukkan pertanyaan atau pesan Anda di sini... Pesan akan masuk ke WhatsApp saya..."
+                                maxlength="500"></textarea>
+                            <span id="err-questions" class="error-text"></span>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Kirim</button>
+                    </form>
+                    <p id="form-success" class="success-text"></p>
+                </div>
+
+                <div class="contact-info-container">
+                    <h3>Hubungi Saya Langsung</h3>
+                    <div class="contact-info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">📧</div>
+                            <div class="info-content">
+                                <p class="info-label">Email</p>
+                                <a href="mailto:ridd2all.done@gmail.com">ridd2all.done@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">💬</div>
+                            <div class="info-content">
+                                <p class="info-label">WhatsApp</p>
+                                <a href="https://wa.me/6287755466436" target="_blank" rel="noreferrer">+62 877 5546
+                                    6436</a>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">📱</div>
+                            <div class="info-content">
+                                <p class="info-label">Instagram</p>
+                                <a href="https://www.instagram.com/el_novant/" target="_blank"
+                                    rel="noreferrer">@el_novant</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </main>
+
+        <footer class="footer">
+            <p>Copyright &copy; 2024 Muhammad Farid Donovant</p>
+        </footer>
+    </div>
+    </div>
+    </div>
+    <script src="js/Porto.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
