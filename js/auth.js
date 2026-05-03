@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             setTimeout(() => {
                 window.dispatchEvent(new Event('start-typing'));
+                window.dispatchEvent(new Event('app-ready'));
             }, 500);
 
             const greetingElement = document.getElementById('greeting');
@@ -73,11 +74,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            let users = JSON.parse(localStorage.getItem('porto_users')) || [];
+            let users = [];
+            try {
+                const rawUsers = localStorage.getItem('porto_users');
+                if (rawUsers) {
+                    users = JSON.parse(rawUsers);
+                    if (!Array.isArray(users)) users = [];
+                }
+            } catch (err) {
+                console.error("Corrupted porto_users data, resetting.");
+                users = [];
+            }
 
             if (isLoginMode) {
                 const user = users.find(u => u.username === usernameInput && u.password === passwordInput);
                 if (user) {
+                    window.dispatchEvent(new Event('access-granted'));
                     authMsg.style.color = '#22c55e';
                     authMsg.textContent = 'Login berhasil! Memuat profil...';
 
