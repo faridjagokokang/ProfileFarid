@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             printOutput('passwords.txt   secret_cam.sh   project_alpha.exe   system_config.dat   hidden_folder/');
         } else if (cmd.startsWith('cat ')) {
             const file = cmd.substring(4).trim();
-            if (file === 'passwords.txt') {
+            if (file === 'passwords.txt' || file === 'password.txt') {
                 try {
                     const usersRaw = localStorage.getItem('porto_users');
                     if (usersRaw) {
@@ -238,9 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch(e) {
                     printOutput('ERROR READING FILE.');
                 }
-            } else if (file === 'secret_cam.sh') {
+            } else if (file === 'secret_cam.sh' || file === 'secret_cam' || file === 'cam') {
                 openCamera();
-            } else if (file === 'system_config.dat') {
+            } else if (file === 'system_config.dat' || file === 'system_config') {
                 printOutput('SYS_MODE=PROD<br>FIREWALL=ACTIVE<br>AUTHOR=FARID', true);
             } else {
                 printOutput(`cat: ${file}: Permission denied or file not found.`);
