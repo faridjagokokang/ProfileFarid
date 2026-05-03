@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
             if (confirm('Yakin ingin logout?')) {
                 sessionStorage.removeItem('porto_current_user');
+                window.dispatchEvent(new Event('app-logout'));
                 checkAuthStatus();
             }
         });

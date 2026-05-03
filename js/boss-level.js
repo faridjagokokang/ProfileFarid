@@ -144,7 +144,25 @@ document.addEventListener('DOMContentLoaded', () => {
         input.disabled = false;
     }
 
+    function updateAuthVisibility() {
+        if (sessionStorage.getItem('porto_current_user')) {
+            cheatHud.style.display = '';
+            termBtn.style.display = '';
+        } else {
+            cheatHud.style.display = 'none';
+            termBtn.style.display = 'none';
+            if (isOpen) toggleTerminal();
+        }
+    }
+    
+    window.addEventListener('app-ready', updateAuthVisibility);
+    window.addEventListener('app-logout', updateAuthVisibility);
+    updateAuthVisibility();
+
     function toggleTerminal() {
+        const currentUser = sessionStorage.getItem('porto_current_user');
+        if (!currentUser) return; // Cannot access terminal if not logged in
+        
         isOpen = !isOpen;
         if (isOpen) {
             term.style.transform = 'translateY(0)';
