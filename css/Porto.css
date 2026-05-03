@@ -137,7 +137,7 @@ body::after {
 
 .auth-wrapper {
     position: fixed;
-    top: 5rem;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
