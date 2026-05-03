@@ -112,9 +112,24 @@ function initResponsiveFeatures() {
     const birthYear = new Date(birthdate).getFullYear();
     const age = currentYear - birthYear;
     const ageDisplayElement = document.getElementById('age-display');
-    if (ageDisplayElement) {
-        ageDisplayElement.textContent = `Saya berusia ${age} tahun`;
-    }
+    
+    window.addEventListener('start-typing', () => {
+        if (ageDisplayElement && !ageDisplayElement.dataset.typed) {
+            ageDisplayElement.dataset.typed = 'true';
+            const baseText = `Saya berusia ${age} tahun dan tinggal di Kabupaten Cilacap, Kecamatan Kesugihan. Saat ini saya tengah menempuh pendidikan di Program Studi Informatika dan memiliki minat besar pada dunia teknologi serta programming.`;
+            ageDisplayElement.textContent = '';
+            let i = 0;
+            function typeAge() {
+                if(i < baseText.length) {
+                    ageDisplayElement.textContent += baseText.charAt(i);
+                    i++;
+                    setTimeout(typeAge, 25);
+                }
+            }
+            typeAge();
+        }
+    });
+
     type();
 
     const themeBtn = document.getElementById('theme-btn');

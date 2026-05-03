@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentUser) {
             authContainer.style.display = 'none';
             mainApp.style.display = 'block';
+            
+            setTimeout(() => {
+                window.dispatchEvent(new Event('start-typing'));
+            }, 500);
 
             const greetingElement = document.getElementById('greeting');
             if (greetingElement) {
@@ -46,13 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
             authMsg.textContent = '';
 
             if (isLoginMode) {
-                authTitle.textContent = 'Login';
-                authSubmitBtn.textContent = 'Login';
-                toggleAuthBtn.textContent = 'Belum punya akun? Sign Up';
+                authTitle.textContent = 'SYSTEM_LOGIN';
+                authSubmitBtn.textContent = 'EXECUTE_LOGIN';
+                toggleAuthBtn.innerHTML = 'DON\'T HAVE ACCOUNT? <span>CREATE_ACCOUNT</span>';
             } else {
-                authTitle.textContent = 'Sign Up';
-                authSubmitBtn.textContent = 'Register';
-                toggleAuthBtn.textContent = 'Sudah punya akun? Login';
+                authTitle.textContent = 'SYSTEM_REGISTER';
+                authSubmitBtn.textContent = 'EXECUTE_REGISTER';
+                toggleAuthBtn.innerHTML = 'ALREADY HAVE ACCOUNT? <span>LOGIN</span>';
             }
         });
     }
