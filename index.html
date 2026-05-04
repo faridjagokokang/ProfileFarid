@@ -41,7 +41,10 @@
     <div id="main-app" style="display: none;">
         <div class="container">
             <header class="hero">
-                <img src="Farid.jpg" alt="Foto profil Farid" class="profile-photo">
+                <div class="profile-hologram-wrapper">
+                    <img src="Farid.jpg" alt="Foto profil Farid" class="profile-photo">
+                    <canvas id="hologram-canvas" class="hologram-canvas"></canvas>
+                </div>
                 <nav class="nav"
                     style="position: absolute; top: 16px; right: 16px; display: flex; gap: 10px; z-index: 10;">
                     <button id="theme-btn" class="theme-btn">SWAP_PHOSPHOR</button>
@@ -297,10 +300,38 @@
 
         <footer class="footer">
             <p>Copyright &copy; 2024 Muhammad Farid Donovant</p>
+            <div id="secret-code" style="opacity:0.05; pointer-events:none; text-align:center; font-size: 0.7rem; margin-top: 10px;">SEC_CODE: OMEGA-77</div>
+            <div id="defuse-code" style="opacity:0.02; pointer-events:none; text-align:center; font-size: 0.6rem; margin-top: 5px;">DEFUSE: 7355608</div>
         </footer>
     </div>
     </div>
     </div>
+
+    <!-- Cyber Cursor & Trajectory -->
+    <div id="cyber-cursor"></div>
+    <div id="cursor-trail-container"></div>
+    
+    <!-- Cyber Chat -->
+    <div id="cyber-chat" class="hidden">
+        <div class="chat-header"><span>UNKNOWN_CONNECTION</span><button id="close-chat">[X]</button></div>
+        <div id="chat-messages"></div>
+        <div class="chat-input-line"><span>></span><input type="text" id="chat-input" disabled placeholder="Connection locked..."></div>
+    </div>
+
+    <!-- God Tier V2 Features -->
+    <div id="hacker-typer" class="hidden">
+        <div class="typer-header">TARGET: MAINFRAME_UPLINK <span>[PROGRESS: <span id="typer-progress">0</span>%]</span></div>
+        <div id="typer-code"></div>
+        <div id="typer-granted" class="hidden">ACCESS GRANTED</div>
+    </div>
+    
+    <div id="self-destruct-overlay" class="hidden">
+        <div class="sd-warning">WARNING</div>
+        <div class="sd-text">SYSTEM PURGE INITIATED</div>
+        <div id="sd-timer">60.00</div>
+        <div class="sd-sub">ENTER DEFUSE CODE IN TERMINAL</div>
+    </div>
+
     <script src="js/Porto.js"></script>
     <script src="js/matrix.js"></script>
     <script src="js/boot.js"></script>

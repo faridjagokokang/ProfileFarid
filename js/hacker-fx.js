@@ -191,4 +191,162 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transition = `none`;
         });
     });
+
+    // 5. Custom Cursor & Trail
+    const cursor = document.getElementById('cyber-cursor');
+    const trailContainer = document.getElementById('cursor-trail-container');
+    if (cursor && trailContainer && window.innerWidth > 768) {
+        let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+        let cursorX = mouseX, cursorY = mouseY;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Create trail
+            if (Math.random() > 0.3) {
+                const trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.style.left = mouseX + 'px';
+                trail.style.top = mouseY + 'px';
+                trailContainer.appendChild(trail);
+                
+                setTimeout(() => {
+                    trail.style.opacity = '0';
+                    trail.style.transition = 'opacity 0.4s';
+                    setTimeout(() => trail.remove(), 400);
+                }, 20);
+            }
+        });
+        
+        // Smooth cursor follow
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.4;
+            cursorY += (mouseY - cursorY) * 0.4;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Cursor interactive states
+        document.addEventListener('mousedown', () => cursor.style.transform = 'translate(-50%, -50%) scale(0.8)');
+        document.addEventListener('mouseup', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
+        
+        const interactables = document.querySelectorAll('a, button, input, textarea, .tab-btn, .project-card, .skill-item');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.width = '40px';
+                cursor.style.height = '40px';
+                cursor.style.borderColor = 'var(--text-primary)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.width = '24px';
+                cursor.style.height = '24px';
+                cursor.style.borderColor = 'var(--accent-color)';
+            });
+        });
+    }
+
+    // 6. 3D Hologram Wireframe (Vanilla Canvas)
+    const holoCanvas = document.getElementById('hologram-canvas');
+    if (holoCanvas) {
+        const hCtx = holoCanvas.getContext('2d');
+        let width = 200, height = 200;
+        holoCanvas.width = width;
+        holoCanvas.height = height;
+
+        // Icosahedron vertices
+        const phi = (1 + Math.sqrt(5)) / 2;
+        let vertices = [
+            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
+            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
+            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
+        ];
+        
+        // Normalize and scale
+        vertices = vertices.map(v => {
+            const len = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+            return [v[0]/len * 60, v[1]/len * 60, v[2]/len * 60];
+        });
+
+        const edges = [
+            [0,11],[0,5],[0,1],[0,7],[0,10], [1,5],[1,9],[1,8],[1,7], [5,11],[5,4],[5,9],
+            [11,10],[11,2],[11,4], [10,7],[10,6],[10,2], [7,8],[7,6], [9,8],[9,3],[9,4],
+            [8,6],[8,3], [6,2],[6,3], [2,4],[2,3], [4,3]
+        ];
+
+        let angleX = 0, angleY = 0;
+        let targetAngleX = 0, targetAngleY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) - 0.5;
+            const y = (e.clientY / window.innerHeight) - 0.5;
+            targetAngleY = x * Math.PI;
+            targetAngleX = y * Math.PI;
+        });
+
+        function hexToRgb(hex) {
+            if(hex.startsWith('#')) {
+                let r=0,g=0,b=0;
+                if(hex.length===4){ r=parseInt(hex[1]+hex[1],16); g=parseInt(hex[2]+hex[2],16); b=parseInt(hex[3]+hex[3],16); }
+                else if(hex.length===7){ r=parseInt(hex.substring(1,3),16); g=parseInt(hex.substring(3,5),16); b=parseInt(hex.substring(5,7),16); }
+                return `${r},${g},${b}`;
+            }
+            return '0,255,255'; 
+        }
+
+        function drawHologram() {
+            hCtx.clearRect(0, 0, width, height);
+            
+            angleX += (targetAngleX - angleX) * 0.05;
+            angleY += (targetAngleY - angleY) * 0.05 + 0.01; // Auto spin Y
+
+            const cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+            const cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+
+            const projected = vertices.map(v => {
+                let x1 = v[0] * cosY - v[2] * sinY;
+                let z1 = v[0] * sinY + v[2] * cosY;
+                let y1 = v[1];
+                let y2 = y1 * cosX - z1 * sinX;
+                let z2 = y1 * sinX + z1 * cosX;
+                let x2 = x1;
+                
+                const fov = 150;
+                const scale = fov / (fov + z2);
+                return [x2 * scale + width/2, y2 * scale + height/2, z2];
+            });
+
+            // Dynamic color
+            const rawAccent = getComputedStyle(document.body).getPropertyValue('--accent-color').trim() || '#00ffff';
+            const rgbAccent = hexToRgb(rawAccent);
+            
+            edges.forEach(edge => {
+                const p1 = projected[edge[0]];
+                const p2 = projected[edge[1]];
+                
+                hCtx.beginPath();
+                hCtx.moveTo(p1[0], p1[1]);
+                hCtx.lineTo(p2[0], p2[1]);
+                
+                const zAvg = (p1[2] + p2[2]) / 2;
+                const alpha = Math.max(0.05, 1 - (zAvg + 60) / 120);
+                
+                hCtx.strokeStyle = `rgba(${rgbAccent}, ${alpha})`;
+                hCtx.lineWidth = 1.5;
+                hCtx.stroke();
+            });
+
+            projected.forEach(p => {
+                hCtx.beginPath();
+                hCtx.arc(p[0], p[1], 2, 0, Math.PI*2);
+                hCtx.fillStyle = `rgb(${rgbAccent})`;
+                hCtx.fill();
+            });
+
+            requestAnimationFrame(drawHologram);
+        }
+        drawHologram();
+    }
 });

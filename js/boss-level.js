@@ -96,12 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
             asciiArt,
             "FOS V2.0 (Farid Operating System)",
             "WELCOME, ADMINISTRATOR.",
-            "TYPE 'help' TO VIEW AVAILABLE COMMANDS."
+            "KETIK, 'help' UNTUK MELIHAT DAFTAR PERINTAH!!!."
         ];
 
         let i = 0;
         function printNext() {
-            if(!isOpen) return; // Stop booting if closed
+            if (!isOpen) return;
             if (i < bootLines.length) {
                 if (i === 2) {
                     printOutput(`<pre style="color:var(--text-primary); margin:0;">${asciiArt}</pre>`, true);
@@ -109,35 +109,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     printOutput(bootLines[i]);
                 }
                 i++;
-                setTimeout(printNext, i === 3 ? 100 : 300); // quick print after ascii
+                setTimeout(printNext, i === 3 ? 100 : 300);
             } else {
                 input.disabled = false;
-                if(isOpen) input.focus();
+                if (isOpen) input.focus();
             }
         }
         printNext();
     }
 
-    // Global process tracking for terminal
     window.currentTerminalGame = null;
     window.currentTerminalKeydown = null;
     window.currentTerminalKeyup = null;
     window.currentTerminalStream = null;
 
     function cleanupTerminalProcesses() {
-        if(window.currentTerminalGame) {
+        if (window.currentTerminalGame) {
             clearInterval(window.currentTerminalGame);
             window.currentTerminalGame = null;
         }
-        if(window.currentTerminalKeydown) {
+        if (window.currentTerminalKeydown) {
             document.removeEventListener('keydown', window.currentTerminalKeydown);
             window.currentTerminalKeydown = null;
         }
-        if(window.currentTerminalKeyup) {
+        if (window.currentTerminalKeyup) {
             document.removeEventListener('keyup', window.currentTerminalKeyup);
             window.currentTerminalKeyup = null;
         }
-        if(window.currentTerminalStream) {
+        if (window.currentTerminalStream) {
             window.currentTerminalStream.getTracks().forEach(t => t.stop());
             window.currentTerminalStream = null;
         }
@@ -154,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isOpen) toggleTerminal();
         }
     }
-    
+
     window.addEventListener('app-ready', updateAuthVisibility);
     window.addEventListener('app-logout', updateAuthVisibility);
     updateAuthVisibility();
@@ -162,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleTerminal() {
         const currentUser = sessionStorage.getItem('porto_current_user');
         if (!currentUser) return; // Cannot access terminal if not logged in
-        
+
         isOpen = !isOpen;
         if (isOpen) {
             term.style.transform = 'translateY(0)';
@@ -188,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeBtn.addEventListener('click', () => {
-        if(isOpen) toggleTerminal();
+        if (isOpen) toggleTerminal();
     });
 
     input.addEventListener('keydown', (e) => {
@@ -214,17 +213,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function processCmd(cmd) {
         if (cmd === 'help') {
             const helpText = `AVAILABLE COMMANDS:
-  help        : Show this message
-  whoami      : Display current entity
-  clear       : Clear terminal output
-  date        : Display system date
-  ls          : List directory contents
-  cat [file]  : Read file contents
-  sudo hack   : Access mainframe (UNAUTHORIZED)
-  |MINI GAME|
-  play snake  : Execute FOS Snake Protocol
-  play pong   : Execute FOS Pong Protocol`;
+
+  [ GENERAL ]
+  help               : Show this message
+  whoami             : Display current entity
+  clear              : Clear terminal output
+  date               : Display system date
+
+  [ FILESYSTEM ]
+  pwd                : Print working directory
+  ls                 : List directory contents
+  cd [dir]           : Change directory
+  cat [file]         : Read file contents
+
+  [ HACKER / SYSTEM ]
+  sudo hack          : Access mainframe
+  hack target        : Init HackerTyper Uplink
+  analyze network    : IP/Geo Tracker
+  enable voice_uplink: Voice Control
+  initiate self-destruct : WARNING
+
+  [ MEDIA / EFFECTS ]
+  rave               : Toggle Rave Mode
+  play music         : Start Synthwave
+  stop music         : Stop Synthwave
+
+  [ MINI GAMES ]
+  play snake         : FOS Snake Protocol
+  play pong          : FOS Pong Protocol`;
             printOutput(`<pre style="margin:0; font-family: inherit;">${helpText}</pre>`, true);
+
         } else if (cmd === 'whoami') {
             const user = sessionStorage.getItem('porto_current_user') || 'GUEST';
             printOutput('CURRENT ENTITY: ' + user);
@@ -244,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (users.length > 0) {
                             let out = 'DECRYPTED LOCAL ACCOUNTS:<br>';
                             users.forEach(u => {
-                                out += `USER: ${u.username} | PASS: ${u.password}<br>`;
+                                out += `USER: ${ u.username } | PASS: ${ u.password } < br > `;
                             });
                             printOutput(out, true);
                         } else {
@@ -253,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         printOutput('FILE EMPTY: NO REGISTERED ENTITIES.');
                     }
-                } catch(e) {
+                } catch (e) {
                     printOutput('ERROR READING FILE.');
                 }
             } else if (file === 'secret_cam.sh' || file === 'secret_cam' || file === 'cam') {
@@ -261,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (file === 'system_config.dat' || file === 'system_config') {
                 printOutput('SYS_MODE=PROD<br>FIREWALL=ACTIVE<br>AUTHOR=FARID', true);
             } else {
-                printOutput(`cat: ${file}: Permission denied or file not found.`);
+                printOutput(`cat: ${ file }: Permission denied or file not found.`);
             }
         } else if (cmd === 'sudo hack') {
             printOutput('ACCESSING MAINFRAME...', false);
@@ -272,22 +290,22 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (cmd === 'play pong') {
             startPongGame();
         } else {
-            printOutput(`COMMAND NOT FOUND: ${cmd}`);
+            printOutput(`COMMAND NOT FOUND: ${ cmd }`);
         }
     }
 
     function openCamera() {
-        if(window.currentTerminalStream) {
+        if (window.currentTerminalStream) {
             printOutput('<span style="color:red">ERROR: CAMERA ALREADY IN USE.</span>', true);
             return;
         }
         printOutput('INITIALIZING WEBCAM UPLINK...', false);
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
+                .then(function (stream) {
                     window.currentTerminalStream = stream;
                     printOutput('<span style="color:#22c55e">UPLINK ESTABLISHED.</span>', true);
-                    
+
                     const video = document.createElement('video');
                     video.autoplay = true;
                     video.style.width = '100%';
@@ -298,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     video.style.display = 'block';
                     video.srcObject = stream;
                     output.appendChild(video);
-                    
+
                     const closeCam = document.createElement('button');
                     closeCam.innerText = '[ TERMINATE CONNECTION ]';
                     closeCam.style.background = 'red';
@@ -318,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     output.appendChild(closeCam);
                     output.scrollTop = output.scrollHeight;
                 })
-                .catch(function(err) {
+                .catch(function (err) {
                     printOutput('<span style="color:red">ERROR: UPLINK FAILED. CAMERA ACCESS DENIED.</span>', true);
                 });
         } else {
@@ -343,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dpad = document.createElement('div');
             dpad.id = 'snake-dpad';
             dpad.innerHTML = `
-                <div class="dpad-row"><button id="dpad-up">▲</button></div>
+            < div class= "dpad-row" > <button id="dpad-up">▲</button></div >
                 <div class="dpad-row"><button id="dpad-left">◀</button><button id="dpad-down">▼</button><button id="dpad-right">▶</button></div>
                 <div class="dpad-row"><button id="dpad-esc" style="background: rgba(255,0,0,0.3); font-size:0.8rem">QUIT</button></div>
             `;
@@ -466,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dpad = document.createElement('div');
             dpad.id = 'pong-dpad';
             dpad.innerHTML = `
-                <div class="dpad-row"><button id="dpad-up">▲</button></div>
+                < div class= "dpad-row" > <button id="dpad-up">▲</button></div >
                 <div class="dpad-row"><button id="dpad-down">▼</button></div>
                 <div class="dpad-row"><button id="dpad-esc" style="background: rgba(255,0,0,0.3); font-size:0.8rem">QUIT</button></div>
             `;
@@ -636,3 +654,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
