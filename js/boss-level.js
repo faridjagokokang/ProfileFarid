@@ -140,6 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
             window.currentTerminalStream.getTracks().forEach(t => t.stop());
             window.currentTerminalStream = null;
         }
+        const typer = document.getElementById('hacker-typer');
+        if (typer) typer.classList.add('hidden');
         input.disabled = false;
     }
 
@@ -289,6 +291,27 @@ document.addEventListener('DOMContentLoaded', () => {
             startSnakeGame();
         } else if (cmd === 'play pong') {
             startPongGame();
+        } else if (cmd === 'hack target') {
+            startHackerTyper();
+        } else if (cmd === 'analyze network') {
+            analyzeNetwork();
+        } else if (cmd === 'enable voice_uplink') {
+            enableVoiceUplink();
+        } else if (cmd === 'initiate self-destruct') {
+            startSelfDestruct();
+        } else if (cmd === '7355608') { // DEFUSE CODE
+            defuseSelfDestruct();
+        } else if (cmd === 'rave') {
+            toggleRaveMode();
+        } else if (cmd === 'play music') {
+            playSynthMusic();
+        } else if (cmd === 'stop music') {
+            stopSynthMusic();
+        } else if (cmd === 'pwd') {
+            printOutput('/home/farid/system_root');
+        } else if (cmd.startsWith('cd ')) {
+            const dir = cmd.substring(3).trim();
+            printOutput(`cd: ${dir}: Permission denied.`);
         } else {
             printOutput(`COMMAND NOT FOUND: ${ cmd }`);
         }
@@ -599,6 +622,196 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let gameLoop = setInterval(draw, 1000 / 60);
         window.currentTerminalGame = gameLoop;
+    }
+
+    function startHackerTyper() {
+        printOutput('INITIATING HACKER UPLINK...', false);
+        const typer = document.getElementById('hacker-typer');
+        const codeBlock = document.getElementById('typer-code');
+        const progressSpan = document.getElementById('typer-progress');
+        const grantedMsg = document.getElementById('typer-granted');
+        
+        if (!typer || !codeBlock) {
+            printOutput('<span style="color:red">ERROR: HACKER MODULE NOT FOUND.</span>', true);
+            return;
+        }
+
+        input.disabled = true;
+        input.blur();
+        typer.classList.remove('hidden');
+        codeBlock.innerHTML = '';
+        grantedMsg.classList.add('hidden');
+        progressSpan.innerText = '0';
+
+        const snippet = `
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+
+int main(int argc, char *argv[]) {
+    printf("Establishing connection to %s...\\n", argv[1]);
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if(sock < 0) {
+        perror("Socket creation failed");
+        return 1;
+    }
+    // Bypassing firewall...
+    // Decrypting handshake keys...
+    // Access granted!
+    return 0;
+}
+`;
+        let i = 0;
+        let progress = 0;
+        const typeInterval = setInterval(() => {
+            if (i < snippet.length) {
+                codeBlock.innerHTML += snippet[i] === '\\n' ? '<br>' : snippet[i];
+                i++;
+                if (Math.random() > 0.5) {
+                    progress += Math.floor(Math.random() * 3);
+                    if (progress > 99) progress = 99;
+                    progressSpan.innerText = progress;
+                }
+            } else {
+                clearInterval(typeInterval);
+                progressSpan.innerText = '100';
+                setTimeout(() => {
+                    grantedMsg.classList.remove('hidden');
+                    setTimeout(() => {
+                        typer.classList.add('hidden');
+                        input.disabled = false;
+                        setTimeout(() => { if(isOpen) input.focus(); }, 100);
+                        printOutput('<span style="color:#0f0">UPLINK SUCCESSFUL. MAINFRAME ACCESSED.</span>', true);
+                    }, 2000);
+                }, 500);
+            }
+        }, 15);
+        window.currentTerminalGame = typeInterval;
+    }
+
+    function analyzeNetwork() {
+        printOutput('ANALYZING NETWORK TOPOLOGY...');
+        setTimeout(() => printOutput('TRACING IP ROUTE: 192.168.1.1 -> 10.0.0.5 -> 172.16.254.1'), 1000);
+        setTimeout(() => printOutput('RESOLVING HOST: target.mainframe.local'), 2000);
+        setTimeout(() => printOutput('GEO-LOCATION PING: -6.2088, 106.8456 (JAKARTA, ID)'), 3000);
+        setTimeout(() => printOutput('<span style="color:#0f0">NETWORK ANALYSIS COMPLETE.</span>', true), 4000);
+    }
+
+    function enableVoiceUplink() {
+        printOutput('INITIALIZING VOICE RECOGNITION MODULE...');
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            setTimeout(() => printOutput('<span style="color:#0f0">VOICE UPLINK ESTABLISHED.</span>', true), 1000);
+        } else {
+            setTimeout(() => printOutput('<span style="color:red">ERROR: VOICE MODULE UNSUPPORTED BY CURRENT HARDWARE.</span>', true), 1000);
+        }
+    }
+
+    let sdInterval = null;
+    function startSelfDestruct() {
+        const sdOverlay = document.getElementById('self-destruct-overlay');
+        const timerEl = document.getElementById('sd-timer');
+        if (!sdOverlay || !timerEl) {
+            printOutput('<span style="color:red">ERROR: CORE MELTDOWN OVERRIDE NOT FOUND.</span>', true);
+            return;
+        }
+        
+        if (sdInterval) return;
+
+        printOutput('<span style="color:red; font-size:1.5em; font-weight:bold;">WARNING: SELF DESTRUCT INITIATED</span>', true);
+        window.triggerRedAlert();
+        sdOverlay.classList.remove('hidden');
+        
+        let timeLeft = 60.00;
+        sdInterval = setInterval(() => {
+            timeLeft -= 0.01;
+            if (timeLeft <= 0) {
+                timeLeft = 0.00;
+                clearInterval(sdInterval);
+                sdInterval = null;
+                document.body.innerHTML = '<div style="background:black; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; color:red; font-family:sans-serif; font-size:3rem; font-weight:bold;">SYSTEM PURGED.</div>';
+            }
+            timerEl.innerText = timeLeft.toFixed(2);
+        }, 10);
+    }
+
+    function defuseSelfDestruct() {
+        if (!sdInterval) {
+            printOutput('NO ACTIVE SELF DESTRUCT SEQUENCE FOUND.');
+            return;
+        }
+        clearInterval(sdInterval);
+        sdInterval = null;
+        const sdOverlay = document.getElementById('self-destruct-overlay');
+        if (sdOverlay) sdOverlay.classList.add('hidden');
+        document.body.classList.remove('red-alert');
+        printOutput('<span style="color:#0f0; font-size:1.2em;">DEFUSE CODE ACCEPTED. SELF DESTRUCT ABORTED.</span>', true);
+    }
+
+    let raveInterval = null;
+    function toggleRaveMode() {
+        if (raveInterval) {
+            clearInterval(raveInterval);
+            raveInterval = null;
+            document.body.style.filter = '';
+            printOutput('RAVE MODE DEACTIVATED.');
+        } else {
+            printOutput('RAVE MODE ACTIVATED. <span class="blink">UNCE UNCE UNCE</span>', true);
+            let hue = 0;
+            raveInterval = setInterval(() => {
+                hue = (hue + 25) % 360;
+                document.body.style.filter = `hue-rotate(${hue}deg) saturate(200%)`;
+            }, 50);
+        }
+    }
+
+    let synthInterval = null;
+    function playSynthMusic() {
+        if (synthInterval) {
+            printOutput('SYNTHWAVE ALREADY PLAYING.');
+            return;
+        }
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) {
+            printOutput('<span style="color:red">ERROR: AUDIO HARDWARE MISSING.</span>', true);
+            return;
+        }
+        printOutput('<span style="color:#ff00ff">STARTING SYNTHWAVE PROTOCOL...</span>', true);
+        const ctx = new AudioContext();
+        
+        const playNote = (freq, duration, type='square') => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        };
+
+        const bassPattern = [55, 55, 65, 55, 73, 55, 65, 55];
+        let step = 0;
+        
+        synthInterval = setInterval(() => {
+            playNote(bassPattern[step % bassPattern.length], 0.2, 'sawtooth');
+            if (step % 4 === 0) playNote(220, 0.1, 'square');
+            step++;
+        }, 200);
+    }
+
+    function stopSynthMusic() {
+        if (synthInterval) {
+            clearInterval(synthInterval);
+            synthInterval = null;
+            printOutput('SYNTHWAVE STOPPED.');
+        } else {
+            printOutput('NO MUSIC PLAYING.');
+        }
     }
 
     // 4. RED ALERT MODE
