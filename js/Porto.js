@@ -112,7 +112,7 @@ function initResponsiveFeatures() {
     const birthYear = new Date(birthdate).getFullYear();
     const age = currentYear - birthYear;
     const ageDisplayElement = document.getElementById('age-display');
-    
+
     window.addEventListener('start-typing', () => {
         if (ageDisplayElement && !ageDisplayElement.dataset.typed) {
             ageDisplayElement.dataset.typed = 'true';
@@ -120,7 +120,7 @@ function initResponsiveFeatures() {
             ageDisplayElement.textContent = '';
             let i = 0;
             function typeAge() {
-                if(i < baseText.length) {
+                if (i < baseText.length) {
                     ageDisplayElement.textContent += baseText.charAt(i);
                     i++;
                     setTimeout(typeAge, 25);
@@ -153,6 +153,16 @@ function initResponsiveFeatures() {
             document.getElementById(`tab-${target}`).classList.add('active');
         });
     });
+
+    const navArticlesBtn = document.getElementById('nav-articles-btn');
+    if (navArticlesBtn) {
+        navArticlesBtn.addEventListener('click', function () {
+            const articlesSection = document.getElementById('articles-section');
+            if (articlesSection) {
+                articlesSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
@@ -270,5 +280,55 @@ function initResponsiveFeatures() {
             });
         });
     });
+
+    // 1. Download CV Button Logic
+    const btnDownloadCv = document.getElementById('btn-download-cv');
+    if (btnDownloadCv) {
+        btnDownloadCv.addEventListener('click', function () {
+            const originalText = this.innerText;
+            this.innerText = '[DECRYPTING_FILE...]';
+            setTimeout(() => {
+                this.innerText = '[DOWNLOADING...]';
+                setTimeout(() => {
+                    this.innerText = '[FILE_SAVED]';
+                    const blob = new Blob(["Resume Data:\nName: Muhammad Farid Donovant\nNIM: 24EO10021\nRole: Software Engineer\n\nSkills: JavaScript, HTML, CSS, Problem Solving, Team Work"], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'Resume_Muhammad_Farid.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    setTimeout(() => this.innerText = originalText, 3000);
+                }, 1500);
+            }, 1500);
+        });
+    }
+
+    // 2. Project Modal Logic
+    const projectsData = {
+        'Website Portfolio': { desc: 'Website portofolio interaktif dengan tema Hacker Terminal, dilengkapi dengan easter eggs, mini-games, dan CMS sederhana.', tech: 'HTML, CSS, Vanilla JS, Web Audio API' },
+        'Mobile App': { desc: 'Aplikasi mobile untuk pemantauan data sistem secara real-time dengan antarmuka futuristik.', tech: 'React Native, Node.js, WebSocket' }
+    };
+    const modalWrapper = document.getElementById('project-modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalTechList = document.getElementById('modal-tech-list');
+
+    if (modalWrapper) {
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const name = card.innerText;
+                const data = projectsData[name] || { desc: 'Data not found.', tech: 'Unknown' };
+                modalTitle.innerText = name;
+                modalDesc.innerText = data.desc;
+                modalTechList.innerText = data.tech;
+                modalWrapper.classList.remove('hidden');
+            });
+        });
+        modalClose.addEventListener('click', () => modalWrapper.classList.add('hidden'));
+    }
 
 }

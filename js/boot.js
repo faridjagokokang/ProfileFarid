@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Only show boot screen if user is not logged in yet
     if (sessionStorage.getItem('porto_current_user')) {
         const bs = document.getElementById('boot-screen');
         if (bs) bs.style.display = 'none';
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const bootScreen = document.getElementById('boot-screen');
     const bootText = document.getElementById('boot-text');
-    
+
     if (!bootScreen || !bootText) return;
 
     const sequence = [
@@ -36,6 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800);
         }
     }
-    
+
     setTimeout(printLine, 300);
 });

@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentUser) {
             authContainer.style.display = 'none';
             mainApp.style.display = 'block';
-            
+
             setTimeout(() => {
                 window.dispatchEvent(new Event('start-typing'));
                 window.dispatchEvent(new Event('app-ready'));

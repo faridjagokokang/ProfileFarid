@@ -8,7 +8,24 @@ const btnSubmit = document.getElementById('btnSubmit');
 const btnCancel = document.getElementById('btnCancel');
 const articleList = document.getElementById('articleList');
 
-let articles = JSON.parse(localStorage.getItem('simple_cms_articles')) || [];
+let articles = JSON.parse(localStorage.getItem('simple_cms_articles'));
+if (!articles || articles.length === 0) {
+    articles = [
+        {
+            id: 'default-1',
+            title: 'Cara Menembus Firewall Tingkat Lanjut',
+            author: 'Unknown_Hacker',
+            content: 'Firewall generasi terbaru menggunakan AI untuk mendeteksi anomali paket data. Untuk melewatinya, kita perlu memanipulasi header TCP...'
+        },
+        {
+            id: 'default-2',
+            title: 'Keamanan Data di Era Web3',
+            author: 'Farid Donovant',
+            content: 'Desentralisasi membawa tantangan keamanan baru. Smart contract rentan terhadap eksploitasi jika tidak diaudit dengan benar...'
+        }
+    ];
+    localStorage.setItem('simple_cms_articles', JSON.stringify(articles));
+}
 let isEditing = false;
 renderArticles();
 

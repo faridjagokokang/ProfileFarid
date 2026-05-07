@@ -4,7 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Muhammad Farid Donovant</title>
+    <title>Profil Muhammad Farid Donovant | Hacker Terminal</title>
+    <meta name="description"
+        content="Portofolio interaktif Muhammad Farid Donovant dengan tema Hacker Terminal. Jelajahi skill, project, dan rahasia di dalamnya.">
+    <meta property="og:title" content="Profil Muhammad Farid Donovant | Hacker Terminal">
+    <meta property="og:description"
+        content="Portofolio interaktif dengan tema Hacker Terminal. Jelajahi skill, project, dan rahasia di dalamnya.">
+    <meta property="og:type" content="website">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
     <link rel="stylesheet" href="css/Porto.css">
 </head>
 
@@ -47,8 +55,11 @@
                 </div>
                 <nav class="nav"
                     style="position: absolute; top: 16px; right: 16px; display: flex; gap: 10px; z-index: 10;">
-                    <button id="theme-btn" class="theme-btn">SWAP_PHOSPHOR</button>
-                    <button class="tab-btn" data-tab="articles">[ARTICLES.EXE]</button>
+                    <button id="theme-btn" class="theme-btn">SWAP_THEME</button>
+                    <button id="sound-toggle-btn" class="theme-btn">[SOUND: ON]</button>
+                    <button id="nav-articles-btn" class="theme-btn">[ARTIKEL.CMS]</button>
+                    <button id="root-access-btn" class="theme-btn"
+                        style="color: var(--error-color); border-color: var(--error-color);">[!] TERMINAL</button>
                     <button id="logout-btn" class="theme-btn">LOG_OUT</button>
                 </nav>
                 <div class="hero-text">
@@ -74,55 +85,57 @@
                             menempuh pendidikan di Program Studi Informatika dan memiliki minat besar pada dunia
                             teknologi serta programming.</p>
                         <p id="typing-text"></p>
+                        <button id="btn-download-cv" class="submit-btn"
+                            style="margin-top: 20px;">[DOWNLOAD_RESUME.PDF]</button>
                     </div>
 
                     <div id="tab-skills" class="tab-panel">
                         <p>Berikut adalah skill saya dalam bidang teknologi dan programming:</p>
                         <ul>
-                            <li><strong>JavaScript</strong> - Kemampuan dasar hingga menengah</li>
-                            <li><strong>HTML & CSS</strong> - Pembuatan layout dan styling website</li>
-                            <li><strong>Problem Solving</strong> - Kemampuan analisis dan pemecahan masalah</li>
-                            <li><strong>Team Work</strong> - Kolaborasi dalam tim development</li>
+                            <li><strong>⚡ JavaScript</strong> - Kemampuan dasar hingga menengah</li>
+                            <li><strong>🌐 HTML & CSS</strong> - Pembuatan layout dan styling website</li>
+                            <li><strong>🧠 Problem Solving</strong> - Kemampuan analisis dan pemecahan masalah</li>
+                            <li><strong>🤝 Team Work</strong> - Kolaborasi dalam tim development</li>
                         </ul>
                     </div>
 
-                    <div id="tab-articles" class="tab-panel">
-                        <div class="contact-form-container">
-                            <h2 id="formTitle">Tambah Artikel</h2>
-                            <form id="articleForm" class="contact-form-advanced">
-                                <input type="hidden" id="articleId">
+        </div>
+        </section>
 
-                                <div class="form-group">
-                                    <label for="title">Judul Artikel:</label>
-                                    <input type="text" id="title" required minlength="3"
-                                        placeholder="Masukkan judul...">
-                                </div>
+        <section class="card" id="articles-section">
+            <h2>System Articles</h2>
+            <div class="contact-form-container">
+                <h2 id="formTitle">Tambah Artikel</h2>
+                <form id="articleForm" class="contact-form-advanced">
+                    <input type="hidden" id="articleId">
 
-                                <div class="form-group">
-                                    <label for="author">Penulis:</label>
-                                    <input type="text" id="author" required placeholder="Nama penulis...">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="content">Konten:</label>
-                                    <textarea id="content" rows="4" required placeholder="Isi artikel..."></textarea>
-                                </div>
-
-                                <div style="display: flex; gap: 10px;">
-                                    <button type="submit" id="btnSubmit" class="submit-btn">SIMPAN.EXE</button>
-                                    <button type="button" id="btnCancel" class="submit-btn"
-                                        style="display: none; color: var(--error-color); border-color: var(--error-color);">ABORT</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div style="margin-top: 30px;">
-                            <h2>Daftar Artikel</h2>
-                            <div id="articleList"></div>
-                        </div>
+                    <div class="form-group">
+                        <label for="title">Judul Artikel:</label>
+                        <input type="text" id="title" required minlength="3" placeholder="Masukkan judul...">
                     </div>
 
-        </div>
+                    <div class="form-group">
+                        <label for="author">Penulis:</label>
+                        <input type="text" id="author" required placeholder="Nama penulis...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Konten:</label>
+                        <textarea id="content" rows="4" required placeholder="Isi artikel..."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" id="btnSubmit" class="submit-btn">SIMPAN.EXE</button>
+                        <button type="button" id="btnCancel" class="submit-btn"
+                            style="display: none; color: var(--error-color); border-color: var(--error-color);">ABORT</button>
+                    </div>
+                </form>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h2>Daftar Artikel</h2>
+                <div id="articleList"></div>
+            </div>
         </section>
 
         <section class="card grid-2">
@@ -178,26 +191,26 @@
             <h2>Skill Saya</h2>
 
             <div class="skill-item" data-level="85">
-                <p>JavaScript</p>
+                <p>⚡ JavaScript</p>
                 <div class="skill-bar">
                     <div class="skill-fill"></div>
                 </div>
             </div>
 
             <div class="skill-item" data-level="90">
-                <p>HTML & CSS</p>
+                <p>🌐 HTML & CSS</p>
                 <div class="skill-bar">
                     <div class="skill-fill"></div>
                 </div>
             </div>
             <div class="skill-item" data-level="80">
-                <p>Problem Solving</p>
+                <p>🧠 Problem Solving</p>
                 <div class="skill-bar">
                     <div class="skill-fill"></div>
                 </div>
             </div>
             <div class="skill-item" data-level="85">
-                <p>Team Work</p>
+                <p>🤝 Team Work</p>
                 <div class="skill-bar">
                     <div class="skill-fill"></div>
                 </div>
@@ -225,14 +238,13 @@
                         dari 24 jam</p>
 
                     <form id="contact-form" class="contact-form-advanced">
-                        <!-- Row 1: Name -->
+
                         <div class="form-group">
                             <label for="full-name">Nama Lengkap</label>
                             <input type="text" id="full-name" name="name" placeholder="Contoh: John Doe" required>
                             <span id="err-name" class="error-text"></span>
                         </div>
 
-                        <!-- Row 2: Email -->
                         <div class="form-group">
                             <label for="email-field">Email</label>
                             <input type="email" id="email-field" name="email" placeholder="Contoh: johndoe@edot.id"
@@ -300,36 +312,60 @@
 
         <footer class="footer">
             <p>Copyright &copy; 2024 Muhammad Farid Donovant</p>
-            <div id="secret-code" style="opacity:0.05; pointer-events:none; text-align:center; font-size: 0.7rem; margin-top: 10px;">SEC_CODE: OMEGA-77</div>
-            <div id="defuse-code" style="opacity:0.02; pointer-events:none; text-align:center; font-size: 0.6rem; margin-top: 5px;">DEFUSE: 7355608</div>
+            <div id="secret-code"
+                style="opacity:0.05; pointer-events:none; text-align:center; font-size: 0.7rem; margin-top: 10px;">
+                SEC_CODE: OMEGA-77</div>
+            <div id="defuse-code"
+                style="opacity:0.02; pointer-events:none; text-align:center; font-size: 0.6rem; margin-top: 5px;">
+                DEFUSE: 7355608</div>
         </footer>
     </div>
     </div>
     </div>
 
-    <!-- Cyber Cursor & Trajectory -->
     <div id="cyber-cursor"></div>
     <div id="cursor-trail-container"></div>
-    
-    <!-- Cyber Chat -->
+
     <div id="cyber-chat" class="hidden">
         <div class="chat-header"><span>UNKNOWN_CONNECTION</span><button id="close-chat">[X]</button></div>
         <div id="chat-messages"></div>
-        <div class="chat-input-line"><span>></span><input type="text" id="chat-input" disabled placeholder="Connection locked..."></div>
+        <div class="chat-input-line"><span>></span><input type="text" id="chat-input" disabled
+                placeholder="Connection locked..."></div>
     </div>
 
-    <!-- God Tier V2 Features -->
     <div id="hacker-typer" class="hidden">
-        <div class="typer-header">TARGET: MAINFRAME_UPLINK <span>[PROGRESS: <span id="typer-progress">0</span>%]</span></div>
+        <div class="typer-header">TARGET: MAINFRAME_UPLINK <span>[PROGRESS: <span id="typer-progress">0</span>%]</span>
+        </div>
         <div id="typer-code"></div>
         <div id="typer-granted" class="hidden">ACCESS GRANTED</div>
     </div>
-    
+
     <div id="self-destruct-overlay" class="hidden">
         <div class="sd-warning">WARNING</div>
         <div class="sd-text">SYSTEM PURGE INITIATED</div>
         <div id="sd-timer">60.00</div>
         <div class="sd-sub">ENTER DEFUSE CODE IN TERMINAL</div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="project-modal" class="modal-wrapper hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-title">PROJECT_NAME</h2>
+                <button id="modal-close">[X]</button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-image-placeholder">IMG_NOT_FOUND</div>
+                <p id="modal-desc" class="modal-desc">Loading description...</p>
+                <div class="modal-tech">
+                    <strong>TECH_STACK:</strong> <span id="modal-tech-list"></span>
+                </div>
+                <div class="modal-links">
+                    <a href="#" id="modal-link-demo" class="submit-btn" target="_blank">[LIVE_DEMO]</a>
+                    <a href="#" id="modal-link-git" class="submit-btn" target="_blank">[SOURCE_CODE]</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/Porto.js"></script>

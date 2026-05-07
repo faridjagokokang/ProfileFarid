@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Cheat Sheet HUD
     const isMobile = window.innerWidth <= 768;
     const cheatHud = document.createElement('div');
     cheatHud.id = 'cheat-hud';
@@ -20,19 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mobile Terminal Button
     const termBtn = document.createElement('button');
     termBtn.id = 'mobile-term-btn';
     termBtn.innerHTML = '>_';
     document.body.appendChild(termBtn);
 
-    // 2. Interactive Radar Background
     const radar = document.createElement('div');
     radar.id = 'radar-scanner';
     document.body.appendChild(radar);
 
     document.addEventListener('mousemove', (e) => {
-        if (Math.random() > 0.9) { // Only occasionally spawn blips to save performance
+        if (Math.random() > 0.9) {
             const blip = document.createElement('div');
             blip.className = 'radar-blip';
             blip.style.left = e.clientX + 'px';
@@ -42,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Secret Terminal
     const termHtml = `
         <div id="cmd-terminal">
             <div id="cyber-globe-wrapper">
@@ -162,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toggleTerminal() {
         const currentUser = sessionStorage.getItem('porto_current_user');
-        if (!currentUser) return; // Cannot access terminal if not logged in
+        if (!currentUser) return;
 
         isOpen = !isOpen;
         if (isOpen) {
@@ -180,6 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     termBtn.addEventListener('click', toggleTerminal);
+
+    const rootAccessBtn = document.getElementById('root-access-btn');
+    if (rootAccessBtn) {
+        rootAccessBtn.addEventListener('click', toggleTerminal);
+    }
 
     window.addEventListener('keydown', (e) => {
         if (e.key === '`' || e.key === '~') {
@@ -264,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (users.length > 0) {
                             let out = 'DECRYPTED LOCAL ACCOUNTS:<br>';
                             users.forEach(u => {
-                                out += `USER: ${ u.username } | PASS: ${ u.password } < br > `;
+                                out += `USER: ${u.username} | PASS: ${u.password} < br > `;
                             });
                             printOutput(out, true);
                         } else {
@@ -281,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (file === 'system_config.dat' || file === 'system_config') {
                 printOutput('SYS_MODE=PROD<br>FIREWALL=ACTIVE<br>AUTHOR=FARID', true);
             } else {
-                printOutput(`cat: ${ file }: Permission denied or file not found.`);
+                printOutput(`cat: ${file}: Permission denied or file not found.`);
             }
         } else if (cmd === 'sudo hack') {
             printOutput('ACCESSING MAINFRAME...', false);
@@ -299,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enableVoiceUplink();
         } else if (cmd === 'initiate self-destruct') {
             startSelfDestruct();
-        } else if (cmd === '7355608') { // DEFUSE CODE
+        } else if (cmd === '7355608') {
             defuseSelfDestruct();
         } else if (cmd === 'rave') {
             toggleRaveMode();
@@ -313,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dir = cmd.substring(3).trim();
             printOutput(`cd: ${dir}: Permission denied.`);
         } else {
-            printOutput(`COMMAND NOT FOUND: ${ cmd }`);
+            printOutput(`COMMAND NOT FOUND: ${cmd}`);
         }
     }
 
@@ -327,18 +328,56 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     window.currentTerminalStream = stream;
-                    printOutput('<span style="color:#22c55e">UPLINK ESTABLISHED.</span>', true);
+                    printOutput('<span style="color:#22c55e">UPLINK ESTABLISHED. PROCESSING ASCII MATRIX FILTER...</span>', true);
 
                     const video = document.createElement('video');
                     video.autoplay = true;
-                    video.style.width = '100%';
-                    video.style.maxWidth = '400px';
-                    video.style.border = '2px solid var(--accent-color)';
-                    video.style.boxShadow = '0 0 10px var(--accent-color)';
-                    video.style.marginTop = '10px';
-                    video.style.display = 'block';
                     video.srcObject = stream;
-                    output.appendChild(video);
+                    video.style.display = 'none';
+                    document.body.appendChild(video);
+
+                    const canvas = document.createElement('canvas');
+                    const w = 80; const h = 60; // Low res for ASCII
+                    canvas.width = w; canvas.height = h;
+                    canvas.style.width = '100%';
+                    canvas.style.maxWidth = '400px';
+                    canvas.style.imageRendering = 'pixelated';
+                    canvas.style.border = '2px solid var(--accent-color)';
+                    canvas.style.boxShadow = '0 0 10px var(--accent-color)';
+                    canvas.style.marginTop = '10px';
+                    canvas.style.display = 'block';
+                    canvas.style.fontFamily = 'monospace';
+                    output.appendChild(canvas);
+
+                    const ctx = canvas.getContext('2d');
+                    // ASCII characters mapped from darkest to lightest
+                    const asciiChars = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'];
+
+                    let asciiInterval = setInterval(() => {
+                        if (video.videoWidth > 0) {
+                            ctx.drawImage(video, 0, 0, w, h);
+                            const frame = ctx.getImageData(0, 0, w, h);
+                            const data = frame.data;
+
+                            ctx.fillStyle = '#000';
+                            ctx.fillRect(0, 0, w, h);
+                            ctx.fillStyle = '#00ff00';
+                            ctx.font = '2px monospace'; // Very tiny, relies on CSS scaling
+
+                            for (let y = 0; y < h; y += 2) { // Skip lines for performance and char aspect ratio
+                                for (let x = 0; x < w; x++) {
+                                    const i = (y * w + x) * 4;
+                                    const r = data[i];
+                                    const g = data[i + 1];
+                                    const b = data[i + 2];
+                                    // Calculate brightness
+                                    const brightness = (r + g + b) / 3;
+                                    const charIndex = Math.floor((brightness / 255) * (asciiChars.length - 1));
+                                    ctx.fillText(asciiChars[charIndex], x, y);
+                                }
+                            }
+                        }
+                    }, 50);
 
                     const closeCam = document.createElement('button');
                     closeCam.innerText = '[ TERMINATE CONNECTION ]';
@@ -351,8 +390,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     closeCam.style.cursor = 'pointer';
                     closeCam.style.fontFamily = 'inherit';
                     closeCam.onclick = () => {
-                        cleanupTerminalProcesses();
+                        clearInterval(asciiInterval);
                         video.remove();
+                        cleanupTerminalProcesses();
+                        canvas.remove();
                         closeCam.remove();
                         printOutput('UPLINK TERMINATED.');
                     };
@@ -374,11 +415,10 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.style.border = '2px solid var(--accent-color)';
         canvas.style.boxShadow = '0 0 15px var(--accent-color)';
         canvas.style.display = 'block'; canvas.style.margin = '0 auto 10px';
-        canvas.style.maxWidth = '100%'; canvas.style.height = 'auto'; // Responsive for mobile
+        canvas.style.maxWidth = '100%'; canvas.style.height = 'auto';
         output.appendChild(canvas);
         output.scrollTop = output.scrollHeight;
 
-        // Mobile D-PAD
         let dpad = null;
         if (isMobile) {
             dpad = document.createElement('div');
@@ -552,9 +592,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const keyHandler = (e) => {
             if ([38, 40, 87, 83, 27].includes(e.keyCode)) e.preventDefault();
-            if (e.keyCode === 38 || e.keyCode === 87) pDir = -1; // UP or W
-            else if (e.keyCode === 40 || e.keyCode === 83) pDir = 1; // DOWN or S
-            else if (e.keyCode === 27) { // ESC
+            if (e.keyCode === 38 || e.keyCode === 87) pDir = -1;
+            else if (e.keyCode === 40 || e.keyCode === 83) pDir = 1;
+            else if (e.keyCode === 27) {
                 cleanupTerminalProcesses();
                 if (dpad) dpad.remove();
                 input.disabled = false; input.focus();
@@ -630,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const codeBlock = document.getElementById('typer-code');
         const progressSpan = document.getElementById('typer-progress');
         const grantedMsg = document.getElementById('typer-granted');
-        
+
         if (!typer || !codeBlock) {
             printOutput('<span style="color:red">ERROR: HACKER MODULE NOT FOUND.</span>', true);
             return;
@@ -680,7 +720,7 @@ int main(int argc, char *argv[]) {
                     setTimeout(() => {
                         typer.classList.add('hidden');
                         input.disabled = false;
-                        setTimeout(() => { if(isOpen) input.focus(); }, 100);
+                        setTimeout(() => { if (isOpen) input.focus(); }, 100);
                         printOutput('<span style="color:#0f0">UPLINK SUCCESSFUL. MAINFRAME ACCESSED.</span>', true);
                     }, 2000);
                 }, 500);
@@ -714,13 +754,13 @@ int main(int argc, char *argv[]) {
             printOutput('<span style="color:red">ERROR: CORE MELTDOWN OVERRIDE NOT FOUND.</span>', true);
             return;
         }
-        
+
         if (sdInterval) return;
 
         printOutput('<span style="color:red; font-size:1.5em; font-weight:bold;">WARNING: SELF DESTRUCT INITIATED</span>', true);
         window.triggerRedAlert();
         sdOverlay.classList.remove('hidden');
-        
+
         let timeLeft = 60.00;
         sdInterval = setInterval(() => {
             timeLeft -= 0.01;
@@ -777,17 +817,17 @@ int main(int argc, char *argv[]) {
         }
         printOutput('<span style="color:#ff00ff">STARTING SYNTHWAVE PROTOCOL...</span>', true);
         const ctx = new AudioContext();
-        
-        const playNote = (freq, duration, type='square') => {
+
+        const playNote = (freq, duration, type = 'square') => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
             osc.type = type;
             osc.frequency.setValueAtTime(freq, ctx.currentTime);
-            
+
             gain.gain.setValueAtTime(0, ctx.currentTime);
             gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.05);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-            
+
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.start();
@@ -796,7 +836,7 @@ int main(int argc, char *argv[]) {
 
         const bassPattern = [55, 55, 65, 55, 73, 55, 65, 55];
         let step = 0;
-        
+
         synthInterval = setInterval(() => {
             playNote(bassPattern[step % bassPattern.length], 0.2, 'sawtooth');
             if (step % 4 === 0) playNote(220, 0.1, 'square');
@@ -814,13 +854,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // 4. RED ALERT MODE
     let isRedAlert = false;
     window.triggerRedAlert = function () {
         if (isRedAlert) return;
         isRedAlert = true;
 
-        // Siren Sound
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
         const gain = ctx.createGain();
@@ -838,22 +876,18 @@ int main(int argc, char *argv[]) {
             osc.stop(ctx.currentTime + 1);
         }, 1000);
 
-        // CSS Changes
         document.body.classList.add('red-alert');
-        window.matrixSpeedMultiplier = 8; // Speed up matrix
+        window.matrixSpeedMultiplier = 8;
 
-        // Banner
         const banner = document.createElement('div');
         banner.className = 'breach-banner';
         banner.innerText = 'WARNING: UNAUTHORIZED SYSTEM BREACH';
         document.body.appendChild(banner);
     };
 
-    // Trigger Red Alert via Photo
     let clickCount = 0;
     let clickTimer;
 
-    // Use event delegation for photo since it might be re-rendered
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('profile-photo')) {
             clickCount++;

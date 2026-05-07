@@ -560,6 +560,45 @@ h2:hover,
 
 .tab-panel.active {
     display: block;
+    animation: tabGlitch 0.4s ease-out forwards;
+}
+
+@keyframes tabGlitch {
+    0% {
+        opacity: 0.5;
+        filter: drop-shadow(2px 2px 0 var(--accent-color)) drop-shadow(-2px -2px 0 var(--error-color));
+        transform: skewX(2deg);
+    }
+
+    20% {
+        opacity: 0.8;
+        filter: drop-shadow(-2px -2px 0 var(--accent-color)) drop-shadow(2px 2px 0 var(--error-color));
+        transform: skewX(-2deg);
+    }
+
+    40% {
+        opacity: 0.6;
+        filter: none;
+        transform: skewX(1deg);
+    }
+
+    60% {
+        opacity: 0.9;
+        filter: drop-shadow(1px 1px 0 var(--accent-color));
+        transform: skewX(-1deg);
+    }
+
+    80% {
+        opacity: 0.7;
+        filter: none;
+        transform: skewX(0.5deg);
+    }
+
+    100% {
+        opacity: 1;
+        filter: none;
+        transform: skewX(0deg);
+    }
 }
 
 .card {
@@ -889,7 +928,6 @@ tbody tr:hover {
     }
 }
 
-/* Cheat HUD */
 #cheat-hud {
     position: fixed;
     bottom: 10px;
@@ -915,7 +953,6 @@ tbody tr:hover {
     }
 }
 
-/* Interactive Radar */
 #radar-scanner {
     position: fixed;
     top: 50%;
@@ -976,7 +1013,6 @@ tbody tr:hover {
     }
 }
 
-/* Mobile Terminal Button */
 #mobile-term-btn {
     position: fixed;
     bottom: 20px;
@@ -1003,7 +1039,6 @@ tbody tr:hover {
     color: #000;
 }
 
-/* Terminal */
 #cmd-terminal {
     position: fixed;
     top: 0;
@@ -1067,7 +1102,6 @@ tbody tr:hover {
     font-size: 0.9rem;
 }
 
-/* Cyber Globe Background */
 #cyber-globe-wrapper {
     position: absolute;
     top: 50%;
@@ -1279,7 +1313,6 @@ body.red-alert #radar-scanner::after {
     }
 }
 
-/* Mobile Responsiveness for Hacker FX */
 @media (max-width: 768px) {
     #mobile-term-btn {
         display: flex;
@@ -1289,12 +1322,10 @@ body.red-alert #radar-scanner::after {
         bottom: 85px;
     }
 
-    /* move above terminal button */
     #cmd-terminal {
         height: 85vh;
     }
 
-    /* more space for dpad */
     .breach-banner {
         font-size: 1.5rem;
         padding: 15px;
@@ -1302,9 +1333,6 @@ body.red-alert #radar-scanner::after {
     }
 }
 
-/* --- ULTIMATE HACKER FEATURES --- */
-
-/* 1. Custom Cursor & Trajectory */
 * {
     cursor: none !important;
 }
@@ -1346,7 +1374,6 @@ body.red-alert #radar-scanner::after {
     opacity: 0.8;
 }
 
-/* 2. Hologram Canvas */
 .profile-hologram-wrapper {
     position: relative;
     display: inline-block;
@@ -1364,7 +1391,6 @@ body.red-alert #radar-scanner::after {
     filter: drop-shadow(0 0 10px var(--accent-color));
 }
 
-/* 3. Cyber Chat */
 #cyber-chat {
     position: fixed;
     bottom: 20px;
@@ -1444,7 +1470,6 @@ body.red-alert #radar-scanner::after {
     font-family: 'Fira Code', monospace;
 }
 
-/* 4. Super Admin Theme (ARG) */
 body.super-admin {
     --text-primary: #ffd700;
     --text-secondary: #ffaa00;
@@ -1465,7 +1490,6 @@ body.super-admin .profile-photo {
     filter: grayscale(50%) contrast(1.5) sepia(100%) hue-rotate(-20deg);
 }
 
-/* 5. Rave Mode (Konami) */
 body.rave-mode {
     animation: rave-bg 0.2s infinite;
 }
@@ -1511,7 +1535,6 @@ body.rave-mode #matrix-rain {
     }
 }
 
-/* 6. Meltdown (Hack The Page) */
 body.meltdown-active {
     overflow: hidden;
     animation: background-panic 0.5s infinite alternate;
@@ -1571,7 +1594,6 @@ body.meltdown-active p {
     }
 }
 
-/* 7. HackerTyper Simulator */
 #hacker-typer {
     position: fixed;
     top: 0;
@@ -1640,7 +1662,6 @@ body.meltdown-active p {
     }
 }
 
-/* 8. Self-Destruct Overlay */
 #self-destruct-overlay {
     position: fixed;
     top: 0;
@@ -1718,9 +1739,96 @@ body.meltdown-active p {
         cursor: auto !important;
     }
 
-    /* disable custom cursor on mobile */
     #cyber-cursor,
     .cursor-trail {
         display: none !important;
     }
+}
+
+/* Project Modal */
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 100000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.modal-wrapper.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 30px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 20px var(--glow-primary);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--text-secondary);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.modal-header button {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+}
+
+.modal-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid var(--text-secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-style: italic;
+    letter-spacing: 2px;
+}
+
+.modal-desc {
+    margin-bottom: 15px;
+}
+
+.modal-tech {
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+    color: var(--accent-color);
+}
+
+.modal-links {
+    display: flex;
+    gap: 15px;
+}
+
+.modal-links a {
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
 }

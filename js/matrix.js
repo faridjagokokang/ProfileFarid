@@ -38,7 +38,7 @@ function draw() {
 
     for (let i = 0; i < drops.length; i++) {
         const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        
+
         ctx.fillText(text, i * fontSize, Math.floor(drops[i]) * fontSize);
 
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
