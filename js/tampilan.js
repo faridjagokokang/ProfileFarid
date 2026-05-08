@@ -1,4 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // 0. Draggable Windows Logic
+    function makeDraggable(elmnt, handle) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (handle) {
+            handle.onmousedown = dragMouseDown;
+            handle.ontouchstart = dragTouchStart;
+        } else {
+            elmnt.onmousedown = dragMouseDown;
+            elmnt.ontouchstart = dragTouchStart;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            // Prevent drag if clicking input/buttons
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA') return;
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+        
+        function dragTouchStart(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'TEXTAREA') return;
+            pos3 = e.touches[0].clientX;
+            pos4 = e.touches[0].clientY;
+            document.ontouchend = closeDragElement;
+            document.ontouchmove = elementTouchDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            
+            // Fix transform offset issue by removing it and using straight top/left
+            if (window.getComputedStyle(elmnt).transform !== 'none') {
+                const rect = elmnt.getBoundingClientRect();
+                elmnt.style.transform = 'none';
+                elmnt.style.top = rect.top + 'px';
+                elmnt.style.left = rect.left + 'px';
+            }
+            
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+        
+        function elementTouchDrag(e) {
+            pos1 = pos3 - e.touches[0].clientX;
+            pos2 = pos4 - e.touches[0].clientY;
+            pos3 = e.touches[0].clientX;
+            pos4 = e.touches[0].clientY;
+            
+            if (window.getComputedStyle(elmnt).transform !== 'none') {
+                const rect = elmnt.getBoundingClientRect();
+                elmnt.style.transform = 'none';
+                elmnt.style.top = rect.top + 'px';
+                elmnt.style.left = rect.left + 'px';
+            }
+            
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            document.ontouchend = null;
+            document.ontouchmove = null;
+        }
+    }
+
+    const terminalEl = document.getElementById('cmd-terminal');
+    const terminalHeader = document.getElementById('terminal-header');
+    if (terminalEl && terminalHeader) {
+        terminalHeader.style.cursor = 'grab';
+        makeDraggable(terminalEl, terminalHeader);
+    }
+    
+    const authCard = document.querySelector('.auth-card');
+    const authHeader = document.querySelector('.auth-header');
+    if (authCard && authHeader) {
+        // authCard is inside flex, need to make it absolute or fixed when dragged
+        authHeader.style.cursor = 'grab';
+        authHeader.addEventListener('mousedown', () => {
+            if(authCard.style.position !== 'fixed') {
+                const rect = authCard.getBoundingClientRect();
+                authCard.style.position = 'fixed';
+                authCard.style.top = rect.top + 'px';
+                authCard.style.left = rect.left + 'px';
+                authCard.style.margin = '0';
+            }
+        });
+        makeDraggable(authCard, authHeader);
+    }
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -433,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 9. Easter Eggs (Konami Code)
-    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    const konamiCode = ['h', 'e', 's', 'o', 'y', 'a', 'm'];
     let konamiIndex = 0;
 
     document.addEventListener('keydown', (e) => {
@@ -449,7 +548,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => window.matrixSpeedMultiplier = 1, 2000);
 
                 if (window.showCyberToast) {
-                    window.showCyberToast('[GOD_MODE: ENABLED] SYSTEM OVERRIDE ACCEPTED', 'success');
+                    window.showCyberToast('[ACHIEVEMENT UNLOCKED: Hacker Master]', 'success');
+                    setTimeout(() => window.showCyberToast('[GOD_MODE: ENABLED] SYSTEM OVERRIDE ACCEPTED', 'success'), 1500);
                 } else {
                     alert('GOD_MODE ENABLED');
                 }
@@ -457,7 +557,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Play awesome sound
                 setTimeout(() => playTone(800, 'square', 0.2, 0.1), 0);
                 setTimeout(() => playTone(1200, 'square', 0.2, 0.1), 200);
-                setTimeout(() => playTone(1600, 'square', 0.4, 0.1), 400);
+                setTimeout(() => playTone(1600, 'square', 0.2, 0.1), 400);
+
+                // GTA HESOYAM Visual Effect
+                const moneyDrop = document.createElement('div');
+                moneyDrop.innerHTML = '+ $250,000<br><span style="font-size: 0.5em; color: white;">FULL HEALTH & ARMOR</span>';
+                moneyDrop.style.position = 'fixed';
+                moneyDrop.style.top = '50%';
+                moneyDrop.style.left = '50%';
+                moneyDrop.style.transform = 'translate(-50%, -50%)';
+                moneyDrop.style.color = '#32cd32'; // GTA green
+                moneyDrop.style.fontFamily = 'Impact, sans-serif';
+                moneyDrop.style.fontSize = '4rem';
+                moneyDrop.style.fontWeight = 'bold';
+                moneyDrop.style.textShadow = '2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000';
+                moneyDrop.style.zIndex = '9999999';
+                moneyDrop.style.textAlign = 'center';
+                moneyDrop.style.transition = 'all 2s ease-out';
+                moneyDrop.style.pointerEvents = 'none';
+                document.body.appendChild(moneyDrop);
+
+                setTimeout(() => {
+                    moneyDrop.style.top = '20%';
+                    moneyDrop.style.opacity = '0';
+                }, 100);
+
+                setTimeout(() => moneyDrop.remove(), 2100);
 
                 // Auto login to CMS if not logged in
                 if (!sessionStorage.getItem('porto_current_user')) {

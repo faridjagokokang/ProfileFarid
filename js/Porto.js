@@ -60,6 +60,26 @@ function initResponsiveFeatures() {
 
     if ('ontouchstart' in window) {
         document.body.classList.add('touch-device');
+        
+        // Gyroscope 3D Tilt for Mobile
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (e) => {
+                const tiltX = e.gamma; // left-to-right (-90 to 90)
+                const tiltY = e.beta;  // front-to-back (-180 to 180)
+                
+                // Limit the tilt values to avoid extreme rotations
+                const constrainedX = Math.max(-30, Math.min(30, tiltX));
+                const constrainedY = Math.max(-30, Math.min(30, tiltY - 45)); // assume holding phone at 45deg
+                
+                const rotationY = (constrainedX / 30) * 15; // max 15deg rotation
+                const rotationX = -(constrainedY / 30) * 15;
+                
+                document.querySelectorAll('.card, .auth-card').forEach(card => {
+                    card.style.transform = `perspective(1000px) rotateX(${rotationX}deg) rotateY(${rotationY}deg) scale3d(1, 1, 1)`;
+                    card.style.transition = 'transform 0.1s ease-out';
+                });
+            });
+        }
     }
 
     const greetingElement = document.getElementById('greeting');
@@ -112,23 +132,45 @@ function initResponsiveFeatures() {
     const birthYear = new Date(birthdate).getFullYear();
     const age = currentYear - birthYear;
     const ageDisplayElement = document.getElementById('age-display');
+    
+    // Play sound helper
+    function playTypeSound() {
+        if (!window.audioCtx) return;
+        const osc = window.audioCtx.createOscillator();
+        const gain = window.audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(window.audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400 + Math.random() * 200, window.audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.01, window.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, window.audioCtx.currentTime + 0.05);
+        osc.start();
+        osc.stop(window.audioCtx.currentTime + 0.05);
+    }
 
-    window.addEventListener('start-typing', () => {
-        if (ageDisplayElement && !ageDisplayElement.dataset.typed) {
-            ageDisplayElement.dataset.typed = 'true';
-            const baseText = `Saya berusia ${age} tahun dan tinggal di Kabupaten Cilacap, Kecamatan Kesugihan. Saat ini saya tengah menempuh pendidikan di Program Studi Informatika dan memiliki minat besar pada dunia teknologi serta programming.`;
-            ageDisplayElement.textContent = '';
-            let i = 0;
-            function typeAge() {
-                if (i < baseText.length) {
-                    ageDisplayElement.textContent += baseText.charAt(i);
-                    i++;
-                    setTimeout(typeAge, 25);
+    if (ageDisplayElement) {
+        const typingObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !ageDisplayElement.dataset.typed) {
+                    ageDisplayElement.dataset.typed = 'true';
+                    const baseText = `Saya berusia ${age} tahun dan tinggal di Kabupaten Cilacap, Kecamatan Kesugihan. Saat ini saya tengah menempuh pendidikan di Program Studi Informatika dan memiliki minat besar pada dunia teknologi serta programming.`;
+                    ageDisplayElement.textContent = '';
+                    let i = 0;
+                    function typeAge() {
+                        if (i < baseText.length) {
+                            ageDisplayElement.textContent += baseText.charAt(i);
+                            if (i % 2 === 0) playTypeSound(); // Play sound every 2 characters
+                            i++;
+                            setTimeout(typeAge, 35);
+                        }
+                    }
+                    setTimeout(typeAge, 500); // slight delay after scroll
                 }
-            }
-            typeAge();
-        }
-    });
+            });
+        }, { threshold: 0.5 });
+        
+        typingObserver.observe(ageDisplayElement);
+    }
 
     type();
 

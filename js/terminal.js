@@ -221,14 +221,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isOpen) toggleTerminal();
     });
 
+    let commandHistory = [];
+    let historyIndex = -1;
+
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const val = input.value.trim();
             if (val) {
                 printOutput(`$ ${val}`);
+                commandHistory.push(val);
+                historyIndex = commandHistory.length;
                 processCmd(val.toLowerCase());
             }
             input.value = '';
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = commandHistory[historyIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                input.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                input.value = '';
+            }
         }
     });
 
@@ -257,11 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
   cd [dir]           : Change directory
   cat [file]         : Read file contents
 
-  [ HACKER / SYSTEM ]
+  [ SYSTEM ]
   sudo hack          : Access mainframe
   hack target        : Init HackerTyper Uplink
   analyze network    : IP/Geo Tracker
   enable voice_uplink: Voice Control
+  hire farid         : Contact Farid Directly
   initiate self-destruct : WARNING
 
   [ MEDIA / EFFECTS ]
@@ -298,9 +319,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (cmd.startsWith('cat ')) {
             const file = cmd.substring(4).trim();
             const node = getVfsNode(currentPath);
-            
+
             if (file === 'passwords.txt' || file === 'password.txt') {
                 if (node && (node[file] || file === 'password.txt' && node['passwords.txt'])) {
+                    if (window.showCyberToast) {
+                        window.showCyberToast('[ACHIEVEMENT UNLOCKED: The Snooper]', 'success');
+                    }
                     try {
                         const usersRaw = localStorage.getItem('porto_users');
                         if (usersRaw) {
@@ -340,6 +364,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     printOutput(`cat: ${file}: No such file or directory`);
                 }
             }
+        } else if (cmd === 'hire farid') {
+            const handshakeAscii = `
+     _.-._
+    | | | |_
+    | | | | |
+  _ |  '-._ |
+  \\\\\`-.-'    ;
+   \\\\    _  |
+    \\   _  |
+     \\_  _ |
+       \\   |
+            `;
+            printOutput(`<pre style="color: var(--accent-color); margin:0; font-size: 0.8rem">${handshakeAscii}</pre>`, true);
+            printOutput('<span style="color:#00ffff">EXCELLENT CHOICE. ESTABLISHING SECURE CONNECTION TO FARID\'S INBOX...</span>', true);
+            setTimeout(() => {
+                window.open('mailto:ridd2all.done@gmail.com?subject=Job%20Opportunity&body=Hello%20Farid,%20I%20saw%20your%20amazing%20cyberpunk%20portfolio!', '_blank');
+            }, 1500);
         } else if (cmd === 'sudo hack') {
             printOutput('ACCESSING MAINFRAME...', false);
             setTimeout(() => printOutput('<span style="color:#ff0000">ERROR: UNAUTHORIZED. INITIATING COUNTERMEASURES.</span>', true), 1000);
@@ -394,6 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     printOutput(`cd: ${dir}: No such file or directory`);
                 }
             }
+        } else if (cmd.startsWith('rm ') || cmd.startsWith('del ') || cmd.startsWith('drop ')) {
+            if (window.showCyberToast) {
+                window.showCyberToast('[WARNING: NICE TRY, BUT NO.]', 'error');
+            }
+            printOutput(`<span style="color:red">ERROR: PERMISSION DENIED. THIS INCIDENT WILL BE REPORTED.</span>`, true);
         } else {
             printOutput(`COMMAND NOT FOUND: ${cmd}`);
         }

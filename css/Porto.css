@@ -2160,3 +2160,137 @@ body.meltdown-active p {
         animation: none !important;
     }
 }
+
+/* ==========================================================================
+   CUSTOM CYBERPUNK SCROLLBAR
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+    border-left: 1px solid rgba(0, 255, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--warning-color, #ffaa00);
+}
+
+/* ==========================================================================
+   GLOBAL PRELOADER
+   ========================================================================== */
+#global-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505;
+    z-index: 99999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+    font-family: 'Fira Code', monospace;
+}
+
+#global-preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-content {
+    text-align: center;
+    color: var(--accent-color);
+    width: 300px;
+}
+
+.preloader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 255, 0, 0.2);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+#preloader-text {
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px var(--accent-color);
+    animation: blink-fast 1s infinite;
+}
+
+.preloader-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+#preloader-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+    transition: width 0.1s linear;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   FINAL TOUCH: CRT SCANLINE OVERLAY
+   ========================================================================== */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 9999999;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* ==========================================================================
+   FINAL TOUCH: PROFILE GLITCH HOVER
+   ========================================================================== */
+.profile-photo {
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-hologram-wrapper:hover .profile-photo {
+    animation: image-glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+    filter: drop-shadow(0 0 10px var(--accent-color)) hue-rotate(90deg);
+}
+
+@keyframes image-glitch {
+    0% { transform: translate(0) }
+    20% { transform: translate(-2px, 2px) }
+    40% { transform: translate(-2px, -2px) }
+    60% { transform: translate(2px, 2px) }
+    80% { transform: translate(2px, -2px) }
+    100% { transform: translate(0) }
+}
