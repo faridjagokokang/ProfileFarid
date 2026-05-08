@@ -29,7 +29,7 @@ function draw() {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#00ff00';
+    const themeColor = window.matrixColorOverride || getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#00ff00';
 
     ctx.shadowBlur = 3;
     ctx.shadowColor = themeColor;

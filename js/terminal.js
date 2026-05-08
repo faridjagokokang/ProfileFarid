@@ -72,6 +72,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let isOpen = false;
     let hasBooted = false;
 
+    // VFS Implementation
+    const vfs = {
+        'home': {
+            'farid': {
+                'system_root': {
+                    'passwords.txt': 'ENCRYPTED_OR_LOCAL_STORAGE',
+                    'secret_cam.sh': 'EXECUTABLE_SCRIPT',
+                    'system_config.dat': 'SYS_MODE=PROD<br>FIREWALL=ACTIVE<br>AUTHOR=FARID',
+                    'project_alpha.exe': 'EXECUTABLE_BINARY_NOT_SUPPORTED',
+                    'hidden_folder': {
+                        'diary.txt': 'Hari ini aku belajar memanipulasi DOM dan Matrix effects. Web ini akan jadi portfolio terbaikku!',
+                        'flag.txt': 'CTF{h4ck3r_m4st3r_f4r1d_2024}'
+                    }
+                }
+            }
+        }
+    };
+    let currentPath = ['home', 'farid', 'system_root'];
+
+    function getVfsNode(pathArray) {
+        let node = vfs;
+        for (let part of pathArray) {
+            if (node[part] !== undefined) node = node[part];
+            else return null;
+        }
+        return node;
+    }
+
     function bootTerminal() {
         if (hasBooted) return;
         hasBooted = true;
@@ -240,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
   rave               : Toggle Rave Mode
   play music         : Start Synthwave
   stop music         : Stop Synthwave
+  color [hex/reset]  : Change Matrix Color
 
   [ MINI GAMES ]
   play snake         : FOS Snake Protocol
@@ -254,35 +283,62 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (cmd === 'date') {
             printOutput(new Date().toString());
         } else if (cmd === 'ls') {
-            printOutput('passwords.txt   secret_cam.sh   project_alpha.exe   system_config.dat   hidden_folder/');
+            const node = getVfsNode(currentPath);
+            if (typeof node === 'object') {
+                const keys = Object.keys(node);
+                if (keys.length === 0) {
+                    printOutput('');
+                } else {
+                    const outputStr = keys.map(k => typeof node[k] === 'object' ? `<span style="color:#00ffff">${k}/</span>` : k).join(' &nbsp;&nbsp; ');
+                    printOutput(outputStr, true);
+                }
+            } else {
+                printOutput(`ls: cannot access: Not a directory`);
+            }
         } else if (cmd.startsWith('cat ')) {
             const file = cmd.substring(4).trim();
+            const node = getVfsNode(currentPath);
+            
             if (file === 'passwords.txt' || file === 'password.txt') {
-                try {
-                    const usersRaw = localStorage.getItem('porto_users');
-                    if (usersRaw) {
-                        const users = JSON.parse(usersRaw);
-                        if (users.length > 0) {
-                            let out = 'DECRYPTED LOCAL ACCOUNTS:<br>';
-                            users.forEach(u => {
-                                out += `USER: ${u.username} | PASS: ${u.password} < br > `;
-                            });
-                            printOutput(out, true);
+                if (node && (node[file] || file === 'password.txt' && node['passwords.txt'])) {
+                    try {
+                        const usersRaw = localStorage.getItem('porto_users');
+                        if (usersRaw) {
+                            const users = JSON.parse(usersRaw);
+                            if (users.length > 0) {
+                                let out = 'DECRYPTED LOCAL ACCOUNTS:<br>';
+                                users.forEach(u => {
+                                    out += `USER: ${u.username} | PASS: ${u.password} <br>`;
+                                });
+                                printOutput(out, true);
+                            } else {
+                                printOutput('FILE EMPTY: NO REGISTERED ENTITIES.');
+                            }
                         } else {
                             printOutput('FILE EMPTY: NO REGISTERED ENTITIES.');
                         }
-                    } else {
-                        printOutput('FILE EMPTY: NO REGISTERED ENTITIES.');
+                    } catch (e) {
+                        printOutput('ERROR READING FILE.');
                     }
-                } catch (e) {
-                    printOutput('ERROR READING FILE.');
+                } else {
+                    printOutput(`cat: ${file}: No such file or directory`);
                 }
             } else if (file === 'secret_cam.sh' || file === 'secret_cam' || file === 'cam') {
-                openCamera();
-            } else if (file === 'system_config.dat' || file === 'system_config') {
-                printOutput('SYS_MODE=PROD<br>FIREWALL=ACTIVE<br>AUTHOR=FARID', true);
+                if (node && node['secret_cam.sh']) {
+                    openCamera();
+                } else {
+                    printOutput(`cat: ${file}: No such file or directory`);
+                }
             } else {
-                printOutput(`cat: ${file}: Permission denied or file not found.`);
+                if (node && node[file]) {
+                    if (typeof node[file] === 'object') {
+                        printOutput(`cat: ${file}: Is a directory`);
+                    } else {
+                        printOutput(node[file], true);
+                    }
+                } else {
+                    printOutput(`cat: ${file}: No such file or directory`);
+                }
             }
         } else if (cmd === 'sudo hack') {
             printOutput('ACCESSING MAINFRAME...', false);
@@ -308,11 +364,36 @@ document.addEventListener('DOMContentLoaded', () => {
             playSynthMusic();
         } else if (cmd === 'stop music') {
             stopSynthMusic();
+        } else if (cmd.startsWith('color ')) {
+            const col = cmd.substring(6).trim();
+            if (col === 'reset') {
+                window.matrixColorOverride = null;
+                printOutput('MATRIX COLOR RESET TO DEFAULT.');
+            } else {
+                window.matrixColorOverride = col;
+                printOutput('MATRIX COLOR OVERRIDDEN TO: <span style="color:' + col + '">' + col + '</span>', true);
+            }
         } else if (cmd === 'pwd') {
-            printOutput('/home/farid/system_root');
+            printOutput('/' + currentPath.join('/'));
         } else if (cmd.startsWith('cd ')) {
-            const dir = cmd.substring(3).trim();
-            printOutput(`cd: ${dir}: Permission denied.`);
+            let dir = cmd.substring(3).trim();
+            if (dir.endsWith('/')) dir = dir.slice(0, -1); // Remove trailing slash
+            if (dir === '..') {
+                if (currentPath.length > 0) currentPath.pop();
+            } else if (dir === '/' || dir === '~') {
+                currentPath = ['home', 'farid', 'system_root'];
+            } else {
+                const node = getVfsNode(currentPath);
+                if (node && node[dir]) {
+                    if (typeof node[dir] === 'object') {
+                        currentPath.push(dir);
+                    } else {
+                        printOutput(`cd: ${dir}: Not a directory`);
+                    }
+                } else {
+                    printOutput(`cd: ${dir}: No such file or directory`);
+                }
+            }
         } else {
             printOutput(`COMMAND NOT FOUND: ${cmd}`);
         }

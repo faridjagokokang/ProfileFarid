@@ -8,6 +8,31 @@ const btnSubmit = document.getElementById('btnSubmit');
 const btnCancel = document.getElementById('btnCancel');
 const articleList = document.getElementById('articleList');
 
+window.showCyberToast = function(message, type = 'success') {
+    const container = document.getElementById('cyber-toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `cyber-toast ${type === 'error' ? 'toast-error' : ''}`;
+    
+    const icon = type === 'error' ? '[!]' : '[+]';
+    toast.innerHTML = `<strong>${icon} SYSTEM:</strong> ${message}`;
+    
+    container.appendChild(toast);
+    
+    // Trigger reflow to animate
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+};
+
 let articles = JSON.parse(localStorage.getItem('simple_cms_articles'));
 if (!articles || articles.length === 0) {
     articles = [
@@ -33,7 +58,7 @@ renderArticles();
 form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!titleInput.value || !authorInput.value || !contentInput.value) {
-        alert("Harap isi semua field!");
+        showCyberToast("Harap isi semua field!", "error");
         return;
     }
 
@@ -48,10 +73,10 @@ form.addEventListener('submit', function (e) {
         articles = articles.map(article =>
             article.id === articleData.id ? articleData : article
         );
-        alert("Artikel berhasil diubah!");
+        showCyberToast("Artikel berhasil diubah!");
     } else {
         articles.push(articleData);
-        alert("Artikel berhasil disimpan!");
+        showCyberToast("Artikel berhasil disimpan!");
     }
 
     saveData();
@@ -119,4 +144,14 @@ function resetForm() {
     formTitle.textContent = "Tambah Artikel";
     btnSubmit.textContent = "Simpan";
     btnCancel.style.display = 'none';
+}
+
+const btnDownloadCv = document.getElementById('btn-download-cv');
+if (btnDownloadCv) {
+    btnDownloadCv.addEventListener('click', () => {
+        window.showCyberToast('INITIALIZING PRINT PROTOCOL...', 'success');
+        setTimeout(() => {
+            window.print();
+        }, 1000);
+    });
 }

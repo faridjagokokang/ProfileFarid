@@ -215,16 +215,6 @@ function initResponsiveFeatures() {
             }
 
             if (isValid) {
-                let messages = JSON.parse(localStorage.getItem('porto_messages')) || [];
-                messages.push({
-                    name: name,
-                    email: email,
-                    phone: countryCode + phone,
-                    message: message,
-                    date: new Date().toISOString()
-                });
-                localStorage.setItem('porto_messages', JSON.stringify(messages));
-
                 document.getElementById('form-success').textContent = 'Mengalihkan ke WhatsApp...';
 
                 const waNumber = '6287755466436';

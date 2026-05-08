@@ -388,6 +388,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             reply = "Saat ini saya sedang menempuh pendidikan Informatika (NIM: 24EO10021). Passion saya lebih ke arah praktek dan implementasi langsung di lapangan.";
                         } else if (lowerText.match(/halo|hi|hai|hello/)) {
                             reply = "Halo. Saya adalah FOS Assistant. Ada yang bisa saya bantu terkait Profil Farid Donovant?";
+                        } else if (lowerText.match(/siapa kamu|about/)) {
+                            reply = "Halo. Saya adalah FOS Assistant. Ada yang bisa saya bantu terkait Profil Farid Donovant?";
+                        } else if (lowerText.match(/help|tolong|bantuan/)) {
+                            reply = "Tentu, list pertanyaan yang bisa diajukan : 'Gaji' atau 'Salary' untuk mengetahui ekspektasi gaji, 'Skill' atau 'Bisa apa' untuk mengetahui skill yang dimiliki, 'Lokasi' atau 'Alamat' untuk mengetahui lokasi, 'Kuliah' atau 'Kampus' atau 'Pendidikan' atau 'Nim' untuk mengetahui pendidikan, 'Halo' atau 'Hi' atau 'Hai' atau 'Hello' untuk memulai percakapan, 'Help' atau 'Tolong' atau 'Bantuan' untuk mengetahui bantuan.";
                         } else {
                             const defaultReplies = [
                                 "Menarik. Sistem sedang memproses input Anda...",
@@ -427,5 +431,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // 9. Easter Eggs (Konami Code)
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === konamiCode[konamiIndex] || e.key === konamiCode[konamiIndex].toLowerCase()) {
+            konamiIndex++;
+            if (konamiIndex === konamiCode.length) {
+                // Konami Code Triggered!
+                konamiIndex = 0;
+                window.matrixColorOverride = '#ffd700'; // Gold Color
+                window.matrixSpeedMultiplier = 5;
+                setTimeout(() => window.matrixSpeedMultiplier = 1, 2000);
+
+                if (window.showCyberToast) {
+                    window.showCyberToast('[GOD_MODE: ENABLED] SYSTEM OVERRIDE ACCEPTED', 'success');
+                } else {
+                    alert('GOD_MODE ENABLED');
+                }
+
+                // Play awesome sound
+                setTimeout(() => playTone(800, 'square', 0.2, 0.1), 0);
+                setTimeout(() => playTone(1200, 'square', 0.2, 0.1), 200);
+                setTimeout(() => playTone(1600, 'square', 0.4, 0.1), 400);
+
+                // Auto login to CMS if not logged in
+                if (!sessionStorage.getItem('porto_current_user')) {
+                    sessionStorage.setItem('porto_current_user', 'GOD_MODE');
+                    const authContainer = document.getElementById('auth-container');
+                    const mainApp = document.getElementById('main-app');
+                    if (authContainer) authContainer.style.display = 'none';
+                    if (mainApp) mainApp.style.display = 'block';
+                    window.dispatchEvent(new Event('app-ready'));
+                }
+            }
+        } else {
+            konamiIndex = 0;
+        }
+    });
 
 });
